@@ -25,6 +25,9 @@ public class Task {
     @Column(name="is_complete")
     private Boolean isComplete;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Profession profession;
+
 
 
 

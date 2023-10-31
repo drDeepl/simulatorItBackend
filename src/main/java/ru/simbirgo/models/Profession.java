@@ -13,14 +13,10 @@ public class Profession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name")
+    @Column(name="name", nullable = false)
     private String name;
 
     @Column(name="description")
     private String description;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private ru.simbirgo.models.Character character;
-
 
 }

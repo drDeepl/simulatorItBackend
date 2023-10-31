@@ -1,12 +1,15 @@
 package ru.simbirgo.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.simbirgo.models.serializers.CharacterSerializer;
 
 @Entity
 @Data
 @NoArgsConstructor
+@JsonSerialize(using= CharacterSerializer.class)
 @Table(name="characters")
 public class Character {
     @Id
@@ -15,4 +18,7 @@ public class Character {
 
     @Column(name ="name")
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Profession profession;
 }
