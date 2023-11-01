@@ -26,7 +26,8 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(AccountDetailsImpl accountPrincipal) {
-        boolean isAdminAccount = accountPrincipal.getAuthorities().toArray()[0] == "ROLE_ADMIN";
+        LOGGER.info("GENERATE JWT TOKEN");
+        boolean isAdminAccount = accountPrincipal.getAuthorities().toArray()[0].toString() == "ROLE_ADMIN";
         long accountId = accountPrincipal.getId();
         return generateTokenFromUsername(accountPrincipal.getUsername(), isAdminAccount, accountId);
     }
@@ -79,6 +80,17 @@ public class JwtUtils {
        String accountId = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("id").toString();
 
        return Long.parseLong(accountId);
+    }
+
+    private Claims extractAllClaims(String token){
+        LOGGER.info("EXTRACT ALL CLAIMS");
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    }
+
+    public Boolean getIsAdmin(String token){
+        LOGGER.info("GET IS ADMIN");
+        final Claims claims = extractAllClaims(token);
+        return (boolean) claims.get("isAdmin");
     }
 
 

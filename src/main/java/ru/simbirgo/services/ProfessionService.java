@@ -34,12 +34,16 @@ public class ProfessionService {
 
     public Profession createProfession(NewProfessionRequest newProfessionRequest){
         LOGGER.info("CREATE PROFESSION");
-//        Profession profession = new Profession();
-//        profession.setName(newProfessionRequest.getName());
-//        profession.setDescription(newProfessionRequest.getDescription());
         Profession profession = modelMapper.map(newProfessionRequest, Profession.class);
         return professionRepository.save(profession);
     }
+
+    public List<Profession> getProfessions(){
+        LOGGER.info("GET PROFESSIONS");
+        return professionRepository.findAll();
+    }
+
+
 
     public Profession getProfessionById(Long id){
         return professionRepository.findById(id).get();
