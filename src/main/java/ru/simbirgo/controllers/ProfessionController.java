@@ -15,8 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirgo.config.jwt.JwtUtils;
 import ru.simbirgo.dtos.JwtDTO;
+import ru.simbirgo.dtos.MessageDTO;
+import ru.simbirgo.exceptions.AppException;
 import ru.simbirgo.models.Profession;
 import ru.simbirgo.payloads.NewProfessionRequest;
+import ru.simbirgo.payloads.ProfessionRequest;
 import ru.simbirgo.services.ProfessionService;
 
 import java.util.List;
@@ -54,12 +57,26 @@ public class ProfessionController {
     @Operation(summary = "редактирование профессии")
     @PutMapping("/update/{professionId}")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = Profession.class))})
-    public ResponseEntity<?> updateProfessionById(@PathVariable("professionId") Long id, @RequestBody NewProfessionRequest newProfessionRequest, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> updateProfessionById(@PathVariable("professionId") Long professionId, @RequestBody NewProfessionRequest newProfessionRequest, HttpServletRequest httpServletRequest){
         LOGGER.info("UPDATE PROFESSION BY ID");
         String token = httpServletRequest.getHeader("Authorization").substring(7);
-        System.out.println(jwtUtils.getIsAdmin(token));
-        return null;
+        boolean isAdmin = jwtUtils.getIsAdmin(token);
+        if(isAdmin){
+            Profession updatedProfession = professionService.updateProfession(professionId, newProfessionRequest);
+            return new ResponseEntity<>(updatedProfession, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new AppException(HttpStatus.FORBIDDEN.value(), "недостаточно прав для доступа"), HttpStatus.FORBIDDEN);
     }
+
+    @Operation(summary="удаление профессии по id")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = MessageDTO.class))})
+    @DeleteMapping("/{professionId}")
+    public ResponseEntity<MessageDTO> deleteProfessionById(@PathVariable("professionId") Long professionId){
+        LOGGER.info("DELETE PROFESSION BY ID");
+        professionService.deleteProfessionById(professionId);
+        return new ResponseEntity<MessageDTO>(new MessageDTO("профессия удалена"), HttpStatus.OK);
+    }
+
 
 
 

@@ -15,9 +15,11 @@ import ru.simbirgo.dtos.JwtDTO;
 import ru.simbirgo.dtos.MessageDTO;
 import ru.simbirgo.exceptions.AppException;
 import ru.simbirgo.models.Character;
+import ru.simbirgo.models.Profession;
 import ru.simbirgo.payloads.NewCharacterRequest;
 import ru.simbirgo.repositories.CharacterRepository;
 import ru.simbirgo.services.CharacterService;
+import ru.simbirgo.services.ProfessionService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,6 +33,9 @@ public class CharacterController {
 
     @Autowired
     private CharacterService characterService;
+
+    @Autowired
+    ProfessionService professionService;
 
     @Operation(summary="получение всех персонажей")
     @GetMapping("")
@@ -46,7 +51,8 @@ public class CharacterController {
     public ResponseEntity<?> newCharacter(@RequestBody NewCharacterRequest newCharacterRequest){
         LOGGER.info("NEW CHARACTER");
         try {
-            Character newCharacter = characterService.createCharacter(newCharacterRequest);
+            Profession profession = professionService.getProfessionById(newCharacterRequest.getProfessionId());
+            Character newCharacter = characterService.createCharacter(newCharacterRequest, profession);
             return new ResponseEntity<Character>(newCharacter, HttpStatus.OK);
         }
         catch(NoSuchElementException NSE){
@@ -65,7 +71,8 @@ public class CharacterController {
     public ResponseEntity<?> updateCharacter(@PathVariable("id") Long id, @RequestBody NewCharacterRequest newCharacterRequest){
         LOGGER.info("UPDATE CHARACTER");
         try {
-            Character updatedCharacter = characterService.updateCharacter(id, newCharacterRequest);
+            Profession profession = professionService.getProfessionById(newCharacterRequest.getProfessionId());
+            Character updatedCharacter = characterService.updateCharacter(id, newCharacterRequest, profession);
             return new ResponseEntity<Character>(updatedCharacter, HttpStatus.OK);
         }
         catch (NoSuchElementException NSE){

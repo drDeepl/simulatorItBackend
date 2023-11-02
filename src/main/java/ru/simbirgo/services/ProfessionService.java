@@ -26,7 +26,7 @@ public class ProfessionService {
     private ModelMapper modelMapper;
 
     @Autowired
-    CharacterRepository characterRepository;
+    CharacterService characterService;
 
 
 
@@ -59,17 +59,18 @@ public class ProfessionService {
         return professionRepository.findByName(name).get();
     }
 
-    public Profession updateProfession(Long professionId, ProfessionRequest professionRequest){
+    public Profession updateProfession(Long professionId, NewProfessionRequest newProfessionRequest){
         LOGGER.info("UPDATE PROFESSION");
 //        Profession updateProfession = modelMapper.map(professionRequest, Profession.class);
         Profession updateProfession = professionRepository.findById(professionId).get();
-        updateProfession.setName(professionRequest.getName());
-        updateProfession.setDescription(professionRequest.getDescription());
+        updateProfession.setName(newProfessionRequest.getName());
+        updateProfession.setDescription(newProfessionRequest.getDescription());
         return professionRepository.save(updateProfession);
     }
 
     public void deleteProfessionById(Long id){
         LOGGER.info("DELETE PROFESSION BY ID");
+        characterService.setNullWithProfessionId(id);
         professionRepository.deleteById(id);
     }
 

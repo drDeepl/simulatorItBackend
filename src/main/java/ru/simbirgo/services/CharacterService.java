@@ -21,31 +21,42 @@ public class CharacterService {
     @Autowired
     private CharacterRepository characterRepository;
 
-    @Autowired
-    private ProfessionService professionService;
+
     @Autowired
     private ModelMapper modelMapper;
 
 
     public List<Character> getCharacters(){
-        LOGGER.info("GETR CHARACTER");
+        LOGGER.info("GET CHARACTER");
         return characterRepository.findAll();
     }
-    public Character createCharacter(NewCharacterRequest newCharacterRequest) {
+
+    public List<Character> getCharactersByProfessionId(Long professionId){
+        LOGGER.info("GET CHARACTERS BY ID");
+        return characterRepository.findAllByProfessionId(professionId);
+    }
+
+    public void setNullWithProfessionId(Long professionId){
+        List<Character> characters = getCharactersByProfessionId(professionId);
+        for(int i = 0; i<characters.size(); i++){
+            characters.get(i).setProfession(null);
+        }
+        characterRepository.saveAll(characters);
+    }
+
+    public Character createCharacter(NewCharacterRequest newCharacterRequest, Profession profession) {
         LOGGER.info("CREATE CHARACTER");
-        Profession profession = professionService.getProfessionById(newCharacterRequest.getProfessionId());
         Character newCharacter = new Character();
         newCharacter.setProfession(profession);
         newCharacter.setName(newCharacterRequest.getName());
         return characterRepository.save(newCharacter);
     }
 
-    public Character updateCharacter(Long id, NewCharacterRequest newCharacterRequest){
+    public Character updateCharacter(Long id, NewCharacterRequest newCharacterRequest, Profession profession){
         LOGGER.info("UPDATE CHARACTER");
         Character characterToUpdate = characterRepository.findById(id).get();
         if(newCharacterRequest.getProfessionId() != null){
             if(!characterToUpdate.getProfession().getId().equals(newCharacterRequest.getProfessionId())){
-                Profession profession = professionService.getProfessionById(newCharacterRequest.getProfessionId());
                 characterToUpdate.setProfession(profession);
             }
         }

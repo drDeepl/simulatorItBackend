@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfessionRequest {
-
     private String name;
     private String description;
     private Long characterId;

@@ -23,7 +23,12 @@ public class CharacterSerializer extends StdSerializer<Character> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", character.getId());
         jsonGenerator.writeStringField("name", character.getName());
-        jsonGenerator.writeNumberField("professionId", character.getProfession().getId());
+        if(character.getProfession() == null){
+            jsonGenerator.writeNullField("professionId");
+        }
+        else {
+            jsonGenerator.writeNumberField("professionId", character.getProfession().getId());
+        }
         jsonGenerator.writeEndObject();
     }
 
