@@ -38,8 +38,8 @@ public class ProfessionController {
     JwtUtils jwtUtils;
 
     @Operation(summary="получение всех профессий")
-    @GetMapping("")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array=@ArraySchema(schema=@Schema(implementation = Profession.class)))})
+    @GetMapping("")
     public List<Profession> getProfessions(){
         LOGGER.info("GET PROFESSIONS");
         return professionService.getProfessions();

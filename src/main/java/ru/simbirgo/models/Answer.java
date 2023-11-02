@@ -13,6 +13,9 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private DialogueText dialogueText;
+
     @Column(name="text")
     private String text;
 

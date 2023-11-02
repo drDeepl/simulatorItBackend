@@ -31,6 +31,16 @@ public class CharacterService {
         return characterRepository.findAll();
     }
 
+    public Character getCharacterById(Long characterId){
+        LOGGER.info("GET CHARACTER BY ID");
+        return characterRepository.findById(characterId).get();
+    }
+
+    public Character getCharacterByName(String name){
+        LOGGER.info("GET CHARACTER BY NAME");
+        return characterRepository.findByName(name.toLowerCase()).get();
+    }
+
     public List<Character> getCharactersByProfessionId(Long professionId){
         LOGGER.info("GET CHARACTERS BY ID");
         return characterRepository.findAllByProfessionId(professionId);
@@ -48,7 +58,7 @@ public class CharacterService {
         LOGGER.info("CREATE CHARACTER");
         Character newCharacter = new Character();
         newCharacter.setProfession(profession);
-        newCharacter.setName(newCharacterRequest.getName());
+        newCharacter.setName(newCharacterRequest.getName().toLowerCase());
         return characterRepository.save(newCharacter);
     }
 
@@ -74,7 +84,10 @@ public class CharacterService {
             LOGGER.error(e.getMessage());
             return false;
         }
+    }
 
-
+    public boolean isExistsCharacterById (Long id){
+        LOGGER.info("IS EXISTS CHARACTER BY ID");
+        return characterRepository.existsById(id);
     }
 }
