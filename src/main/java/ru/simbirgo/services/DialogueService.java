@@ -4,11 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.simbirgo.exceptions.AppException;
+import ru.simbirgo.models.Answer;
 import ru.simbirgo.models.Character;
 import ru.simbirgo.models.Dialogue;
 import ru.simbirgo.models.DialogueText;
 import ru.simbirgo.payloads.NewDialogueRequest;
 import ru.simbirgo.payloads.NewDialogueTextRequest;
+import ru.simbirgo.repositories.AnswerRepository;
 import ru.simbirgo.repositories.DialogueRepository;
 import ru.simbirgo.repositories.DialogueTextRepository;
 
@@ -23,6 +26,9 @@ public class DialogueService {
 
     @Autowired
     DialogueTextRepository dialogueTextRepository;
+
+    @Autowired
+    AnswerRepository answerRepository;
 
     public Dialogue newDialogue(NewDialogueRequest newDialogueRequest, Character character){
         LOGGER.info("NEW DIALOGUE");
@@ -51,9 +57,40 @@ public class DialogueService {
         return dialogueTextRepository.findAllByDialogueId(dialogueId);
     }
 
+    public List<DialogueText> getTexts(){
+        LOGGER.info("GET TEXTS");
+        return dialogueTextRepository.findAll();
+    }
+
     public void deleteDialogueById(Long id){
         LOGGER.info("DELETE DIALOGUE BY ID");
         dialogueRepository.deleteById(id);
+    }
+
+    public boolean deleteDialogueTextById(Long dialogueTextId){
+        LOGGER.info("DELETEW DIALOGUE TEXT BY ID");
+        try{
+            dialogueTextRepository.deleteById(dialogueTextId);
+            return true;
+        }
+        catch (RuntimeException RE){
+            LOGGER.error(RE.getMessage());
+            return false;
+        }
+    }
+
+
+
+    public Answer createAnswerDialogueText(long dialogueTextId, String answerText) throws NullPointerException{
+        LOGGER.info("NEW ANSWER DIALOGUE");
+        DialogueText dialogueText = dialogueTextRepository.findById(dialogueTextId).get();
+        if(dialogueText != null){
+            Answer answer = new Answer();
+            answer.setDialogueText(dialogueText);
+            answer.setTextAnswer(answerText);
+            return answerRepository.save(answer);
+        }
+         throw new NullPointerException("фраза, для которой добавляется ответ, не найдена");
     }
 
 
