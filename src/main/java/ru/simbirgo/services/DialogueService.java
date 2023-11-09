@@ -80,7 +80,6 @@ public class DialogueService {
     }
 
 
-
     public Answer createAnswerDialogueText(long dialogueTextId, String answerText) throws NullPointerException{
         LOGGER.info("NEW ANSWER DIALOGUE");
         DialogueText dialogueText = dialogueTextRepository.findById(dialogueTextId).get();
@@ -91,6 +90,11 @@ public class DialogueService {
             return answerRepository.save(answer);
         }
          throw new NullPointerException("фраза, для которой добавляется ответ, не найдена");
+    }
+
+    public List<String> getAnswersByDialogueTextId(Long dialogueTextId){
+        LOGGER.info("GET ANSWER BY DIALOGUE ID");
+        return answerRepository.findAnswersByDialogueTextId(dialogueTextId);
     }
 
 

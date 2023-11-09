@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer,Long> {
 
-    @Query(value="SELECT * FROM answers WHERE dialogue_text_id = :dialogueTextId", nativeQuery = true)
-    List<Answer> findAnswersByDialogueTextId(@Param("dialogueTextId") Long dialogueTextId);
+    @Query(value="SELECT text FROM answers WHERE dialogue_text_id = :dialogueTextId", nativeQuery = true)
+    List<String> findAnswersByDialogueTextId(@Param("dialogueTextId") Long dialogueTextId);
 }

@@ -23,6 +23,9 @@ public class DialogueText {
     @ManyToOne(fetch = FetchType.LAZY)
     private Dialogue dialogue;
 
+    @OneToMany(mappedBy = "dialogueText")
+    private List<Answer> answers;
+
     @Column(name="text")
     private String text;
 

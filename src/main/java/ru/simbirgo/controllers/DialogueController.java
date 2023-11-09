@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.simbirgo.dtos.DialogueTextDTO;
 import ru.simbirgo.dtos.MessageDTO;
 import ru.simbirgo.exceptions.AppException;
 import ru.simbirgo.models.*;
@@ -75,7 +76,8 @@ public class DialogueController {
         try{
             LOGGER.info("ANSWER: " + newAnswerRequest.getAnswer());
             Answer newAnswerForDialogueText =  dialogueService.createAnswerDialogueText((long) dialogueTextId, newAnswerRequest.getAnswer());
-            return new ResponseEntity<>(newAnswerForDialogueText, HttpStatus.OK);
+            LOGGER.info("created answer");
+            return new ResponseEntity<Answer>(newAnswerForDialogueText, HttpStatus.OK);
         }
         catch (NullPointerException NPE){
             LOGGER.error(NPE.getMessage());
@@ -86,7 +88,7 @@ public class DialogueController {
 
 
     @Operation(summary = "получение всех фраз диалога по id")
-    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = DialogueText.class))})
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = DialogueTextDTO.class))})
     @GetMapping("/dialogue_text/{dialogueId}")
     public ResponseEntity<?> getTextByDialogueId(@PathVariable("dialogueId") Long dialogueId){
         LOGGER.info("GET TEXT BY DIALOGUE ID");
@@ -100,6 +102,23 @@ public class DialogueController {
         }
     }
 
+
+    @Operation(summary = "получение ответов к фразе диалога по id фразы(dialogueText) диалога")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array=@ArraySchema(schema=@Schema(implementation = String.class)))})
+    @GetMapping("/dialogue_text/answer/{dialogueTextId}")
+    public ResponseEntity<?> getAnswerByDialogueId(@PathVariable("dialogueTextId") Long dialogueId){
+        try{
+            List<String> answers = dialogueService.getAnswersByDialogueTextId(dialogueId);
+
+            return new ResponseEntity<>(answers, HttpStatus.OK);
+        }
+        catch (RuntimeException E){
+            LOGGER.info(E.getMessage());
+            return new ResponseEntity<>(new AppException(HttpStatus.FORBIDDEN.value(), "что-то пошло не так"), HttpStatus.FORBIDDEN);
+        }
+    }
+
+
     @Operation(summary="получение всех фраз для всех диалогов")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = DialogueText.class))})
     @GetMapping("/dialogue_text")
@@ -108,9 +127,6 @@ public class DialogueController {
         List<DialogueText> texts = dialogueService.getTexts();
         return new ResponseEntity<List<DialogueText>>(texts, HttpStatus.OK);
     }
-
-
-
 
     @Operation(summary = "удаление диалога")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = Dialogue.class))})
@@ -131,7 +147,5 @@ public class DialogueController {
         }
         return new ResponseEntity<MessageDTO>(new MessageDTO("во время удаление фразы произошла ошибка"), HttpStatus.FORBIDDEN);
     }
-
-
 
 }

@@ -25,7 +25,6 @@ public class AnswerSerializer extends StdSerializer<Answer> {
         else{
         jsonGenerator.writeStringField("textAnswer", answer.getTextAnswer());
         }
-
         jsonGenerator.writeEndObject();
     }
 
