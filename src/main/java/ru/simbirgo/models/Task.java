@@ -17,14 +17,6 @@ public class Task {
     @Column(name="description")
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="level_difficult_id", referencedColumnName = "id")
-    private LevelDifficult levelDifficult;
-
-
-    @Column(name="is_complete")
-    private Boolean isComplete;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Profession profession;
 
