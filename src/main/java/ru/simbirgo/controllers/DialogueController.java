@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.simbirgo.dtos.NewAnswerDTO;
 import ru.simbirgo.dtos.DialogueTextDTO;
 import ru.simbirgo.dtos.MessageDTO;
 import ru.simbirgo.exceptions.AppException;
@@ -25,7 +25,6 @@ import ru.simbirgo.services.CharacterService;
 import ru.simbirgo.services.DialogueService;
 
 import java.util.List;
-import java.util.Locale;
 
 @Tag(name="DialogueController")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -69,7 +68,7 @@ public class DialogueController {
     }
 
     @Operation(summary="добавление ответа к фразе по id диалога")
-    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = Answer.class))})
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = NewAnswerDTO.class))})
     @PostMapping("/dialogue_text/answer/new/{dialogueTextId}")
     public ResponseEntity<?> addAnswerToDialogueById(@PathVariable("dialogueTextId") Long dialogueTextId, @RequestBody  NewAnswerRequest newAnswerRequest){
         LOGGER.info("ADD ANSWER TO DIALOGUE BY ID DIALOGUE");
@@ -77,7 +76,8 @@ public class DialogueController {
             LOGGER.info("ANSWER: " + newAnswerRequest.getAnswer());
             Answer newAnswerForDialogueText =  dialogueService.createAnswerDialogueText((long) dialogueTextId, newAnswerRequest.getAnswer());
             LOGGER.info("created answer");
-            return new ResponseEntity<Answer>(newAnswerForDialogueText, HttpStatus.OK);
+            NewAnswerDTO newAnswerDto = new NewAnswerDTO(newAnswerForDialogueText.getId(), newAnswerForDialogueText.getDialogueText().getId(), newAnswerForDialogueText.getTextAnswer());
+            return new ResponseEntity<NewAnswerDTO>(newAnswerDto, HttpStatus.OK);
         }
         catch (NullPointerException NPE){
             LOGGER.error(NPE.getMessage());
