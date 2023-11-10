@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import ru.simbirgo.models.Task;
 import ru.simbirgo.models.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = "SELECT * FROM tasks WHERE profession_id =:professionId", nativeQuery = true)
-    Optional<Task> findByProfessionId(@Param("professionId") Long id);
+    List<Task> findByProfessionId(@Param("professionId") Long id);
 
 
 }

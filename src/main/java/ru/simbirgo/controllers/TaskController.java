@@ -1,6 +1,7 @@
 package ru.simbirgo.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.simbirgo.dtos.MessageDTO;
 import ru.simbirgo.exceptions.AppException;
 import ru.simbirgo.exceptions.ProfessionNotExists;
 import ru.simbirgo.models.Dialogue;
@@ -19,6 +21,8 @@ import ru.simbirgo.payloads.NewTaskRequest;
 import ru.simbirgo.services.CharacterService;
 import ru.simbirgo.services.DialogueService;
 import ru.simbirgo.services.TaskService;
+
+import java.util.List;
 
 @Tag(name="TaskController")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -46,6 +50,34 @@ public class TaskController {
         catch (java.util.NoSuchElementException NE){
             return  new ResponseEntity<>(new AppException(HttpStatus.NOT_FOUND.value(), "персонаж для которого добавляется задание не найден"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Operation(summary="получение всех заданий")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array=@ArraySchema(schema=@Schema(implementation = Task.class)))})
+    @GetMapping("")
+    public ResponseEntity<?> getTasks(){
+        LOGGER.info("GET TASKS");
+        List<Task> tasks = taskService.getTasks();
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @Operation(summary="получение всех заданий для профессии по professionId")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array=@ArraySchema(schema=@Schema(implementation = Task.class)))})
+    @GetMapping("/{professionId}")
+    public ResponseEntity<?> getTasksForProfession(@PathVariable("professionId") Long professionId){
+        LOGGER.info("GET TASKS FOR PROFESSION");
+        List<Task> tasks = taskService.getTasksByProfessionId(professionId);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @Operation(summary = "удаление задания по taskId")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema=@Schema(implementation = MessageDTO.class))})
+    @DeleteMapping("/{taskId}")
+    public MessageDTO deleteTaskById(@PathVariable("taskId") Long taskId){
+        LOGGER.info("DELETE TASK BY ID");
+        boolean isDelete = taskService.deleteById(taskId);
+        String msg =  isDelete ? "удаление прошло успешно" : "то-то пошло не так";
+        return new MessageDTO(msg);
     }
 
 }

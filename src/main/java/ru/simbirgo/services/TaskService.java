@@ -14,6 +14,8 @@ import ru.simbirgo.repositories.DialogueRepository;
 import ru.simbirgo.repositories.DialogueTextRepository;
 import ru.simbirgo.repositories.TaskRepository;
 
+import java.util.List;
+
 @Service
 public class TaskService {
     private final Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
@@ -31,6 +33,30 @@ public class TaskService {
         newTask.setDescription(newTaskRequest.getDescription());
         newTask.setProfession(profession);
         return taskRepository.save(newTask);
+
+    }
+
+    public List<Task> getTasks(){
+        LOGGER.info("GET TASKS");
+        return taskRepository.findAll();
+    }
+
+    public List<Task> getTasksByProfessionId(Long professionId){
+        LOGGER.info("GET TASKS BY PROFESSION ID");
+        return taskRepository.findByProfessionId(professionId);
+    }
+
+    public boolean deleteById(Long taskId){
+        LOGGER.info("DELETE BY ID");
+        try{
+            taskRepository.deleteById(taskId);
+            return true;
+
+        }
+        catch (RuntimeException RE){
+            LOGGER.error(RE.getMessage());
+            return false;
+        }
 
     }
 

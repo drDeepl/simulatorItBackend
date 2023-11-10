@@ -10,20 +10,20 @@ import ru.simbirgo.models.serializers.TaskSerializer;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name="tasks")
+@Table(name="tasks_users")
 @JsonSerialize(using= TaskSerializer.class)
-public class Task {
+public class TaskUsers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="description")
-    private String description;
+    @Column(name="is_complete")
+    private Boolean isComplete;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Profession profession;
+    private Task task;
 
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
 }

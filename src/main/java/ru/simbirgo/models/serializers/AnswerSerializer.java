@@ -8,7 +8,13 @@ import ru.simbirgo.models.DialogueText;
 
 import java.io.IOException;
 
+
+
 public class AnswerSerializer extends StdSerializer<Answer> {
+
+    public AnswerSerializer(){
+        this(null);
+    }
 
     public AnswerSerializer(Class<Answer> r){
         super(r);
