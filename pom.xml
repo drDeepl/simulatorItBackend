@@ -8,8 +8,8 @@
 		<version>3.0.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ru.volgait</groupId>
-	<artifactId>simbirgo</artifactId>
+	<groupId>ru.kmsu</groupId>
+	<artifactId>simulatorit</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ITSimulator</name>
 	<description>API для симулятора IT профессий</description>

@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 
 @SpringBootApplication
-public class SimbirgoApplication {
+public class SimulatorItApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SimbirgoApplication.class, args);
+		SpringApplication.run(SimulatorItApplication.class, args);
 	}
 
 }
