@@ -36,15 +36,12 @@ public class OpenAPIConfig {
         devServer.setDescription("Server URL in Development environment");
 
         Contact contact = new Contact();
-        contact.setEmail("vlimaster@yandex.ru");
-        contact.setName("Владимир Никитин");
 
 
         Info info = new Info()
-                .title("SimbirGo API")
+                .title("Simulator It API")
                 .version("1.0")
-                .contact(contact)
-                .description("Задание для полуфинала Волга IT");
+                .contact(contact);                
 
         return new OpenAPI().addSecurityItem(new SecurityRequirement().
                 addList("Bearer Authentication"))

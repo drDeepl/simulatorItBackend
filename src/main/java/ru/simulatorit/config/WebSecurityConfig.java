@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.simbirgo.config.jwt.AuthEntryPointJwt;
 import ru.simbirgo.config.jwt.AuthTokenFilter;
 import ru.simbirgo.services.AccountDetailsServiceImpl;
-
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableMethodSecurity
@@ -79,6 +79,7 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+	http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
 
         return http.build();
     }

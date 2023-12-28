@@ -19,7 +19,7 @@ public class User {
     private String password;
     @Column(name="gender")
     private String gender;
-    @Column(name="is_admin")
+    @Column(name="is_admin", nullable=false)
     private Boolean isAdmin;
 
 
@@ -30,9 +30,9 @@ public class User {
         this.isAdmin =isAdmin;
     }
 
-    public User(String username, String password, String gender){
+    public User(String username, String password, Boolean isAdmin){
         this.username = username;
-        this.gender = gender;
+        this.isAdmin = isAdmin;
         this.password = password;
     }
 

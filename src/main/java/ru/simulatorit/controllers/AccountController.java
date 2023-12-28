@@ -80,7 +80,7 @@ public class AccountController {
         }
 
 
-        User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()));
+        User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), signUpRequest.getGender(), signUpRequest.getIsAdmin());
         accountRepository.save(user);
 
         return ResponseEntity.ok(new MessageDTO("Пользователь зарегистирован!"));
